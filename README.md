@@ -25,5 +25,5 @@ services:
 
 No feast for the eyes, but does the job ...
 
-![](screenshot.png)
+![Screenshot](screenshot.png)
 
