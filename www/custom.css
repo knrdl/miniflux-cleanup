@@ -1,0 +1,67 @@
+.card {
+    background-color: initial !important;
+    border: 1px solid rgba(255, 255, 255, .125) !important;
+}
+
+h3 span.btn-group {
+    display: none !important;
+}
+
+.form-control {
+    color: var(--body-color) !important;
+    background-color: var(--body-background) !important;
+}
+
+pre {
+    color: var(--body-color) !important;
+}
+
+:root {
+    --body-color: #efefef;
+    --body-background: #222;
+    --table-th-background: #333;
+    --table-th-color: #aaa;
+    --input-border: 1px solid #555;
+    --input-background: #333;
+    --input-color: #ccc;
+    --input-focus-color: #efefef;
+    --input-focus-border-color: rgba(82, 168, 236, 0.8);
+    --input-focus-box-shadow: 0 0 8px rgba(82, 168, 236, 0.6);
+}
+
+body {
+    text-rendering: optimizeLegibility;
+    color: var(--body-color);
+    background: var(--body-background)
+}
+
+th {
+    background: var(--table-th-background);
+    color: var(--table-th-color);
+}
+
+input[type=search],
+input[type=url],
+input[type=password],
+input[type=text],
+input[type=number] {
+    color: var(--input-color);
+    background: var(--input-background);
+    border: var(--input-border);
+    padding: 3px;
+    line-height: 20px;
+    font-size: 99%;
+    -webkit-appearance: none
+}
+
+input[type=search]:focus,
+input[type=url]:focus,
+input[type=password]:focus,
+input[type=text]:focus,
+input[type=number]:focus {
+    color: var(--input-focus-color) !important;
+    border-color: var(--input-focus-border-color) !important;
+    outline: 0;
+    box-shadow: var(--input-focus-box-shadow)
+}
+

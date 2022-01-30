@@ -1,0 +1,52 @@
+version: '3'
+
+services:
+
+  postgres:
+    image: postgres:14-alpine
+    hostname: postgres
+    restart: always
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    networks:
+      net:
+
+  miniflux:
+    image: miniflux/miniflux
+    restart: always
+    environment:
+      POLLING_FREQUENCY: '60' # minutes
+      BATCH_SIZE: '100'
+      CLEANUP_ARCHIVE_READ_DAYS: '7'
+      AUTH_PROXY_HEADER: 'X-Username'
+      AUTH_PROXY_USER_CREATION: '1'
+      PORT: '8080'
+      DATABASE_URL: postgres://postgres:postgres@postgres/postgres?sslmode=disable
+      RUN_MIGRATIONS: '1'
+      CREATE_ADMIN: '1'
+      ADMIN_USERNAME: admin
+      ADMIN_PASSWORD: admin123
+    ports:
+      - "8080:8080"
+    networks:
+      - net
+    depends_on:
+      - postgres
+
+  miniflux-cleanup:
+    build: .
+    restart: always
+    environment:
+      MINIFLUX_URL: http://miniflux:8080
+      AUTH_PROXY_HEADER: 'X-Username'     # read username from http header
+      DEFAULT_USERNAME: admin             # if empty use this one as static username
+      CRONJOB_INTERVAL: 10s
+    ports:
+      - "8081:8080"
+    networks:
+      - net
+
+networks:
+  net:

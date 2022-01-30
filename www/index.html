@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Miniflux Cleanup</title>
+    <link rel="stylesheet" href="spectre-icons.min.css">
+    <link rel="stylesheet" type="text/css" href="bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="custom.css"/>
+    <script src="jsoneditor.min.js"></script>
+</head>
+
+<body>
+<div class="container-fluid mt-3">
+    <div id="editor_holder"></div>
+    <div class="card card-body">
+        <h4>Regex Example Rules</h4>
+        <ul>
+            <li><code style="min-width: 6rem;display:inline-block">Term</code> Cleanup all entries where title
+                <b>contains</b> <em>Term</em></li>
+            <li><code style="min-width: 6rem;display:inline-block">^Term</code> Cleanup all entries where title <b>starts
+                with</b> <em>Term</em></li>
+            <li><code style="min-width: 6rem;display:inline-block">Term$</code> Cleanup all entries where title <b>ends
+                with</b> <em>Term</em></li>
+        </ul>
+    </div>
+    <div class="d-flex justify-content-between align-items-end mt-2">
+        <b>Preview Output</b>
+        <div class="d-flex">
+            <button type="button" id="save" class="btn btn-lg btn-success">Save</button>
+            <button type="button" id="preview" class="btn btn-lg btn-primary ml-2">Preview</button>
+        </div>
+    </div>
+    <div class="card mb-5 mt-2 p-1" style="min-height: 100px">
+        <pre id="output"></pre>
+    </div>
+</div>
+
+<script>
+    const schema = {
+        type: 'object',
+        title: 'Miniflux Cleanup',
+        properties: {
+            api_key: {
+                type: 'string',
+                title: 'API Key (Settings → API Keys → Create a new API key)',
+                required: true,
+                minLength: 1
+            },
+            rules: {
+                type: "array",
+                format: "table",
+                required: true,
+                title: 'Filtering Rules',
+                items: {
+                    type: "object",
+                    title: "Rule",
+                    properties: {
+                        url_type: {
+                            title: "URL Type",
+                            type: "string",
+                            required: true,
+                            enum: ['site', 'entry', 'feed'],
+                            options: {
+                                enum_titles: ['Site URL', 'Entry URL', 'Feed URL']
+                            }
+                        },
+                        url_mode: {
+                            title: "URL Match",
+                            type: "string",
+                            required: true,
+                            enum: ['full', 'start', 'regex'],
+                            options: {
+                                enum_titles: ['Full', 'Start', 'Regex']
+                            }
+                        },
+                        url_value: {
+                            title: "URL",
+                            type: "string",
+                            format: 'url',
+                        },
+                        filter_mode: {
+                            title: 'Title/Content Filter Mode',
+                            type: 'string',
+                            required: true,
+                            enum: ['clean', 'keep'],
+                            options: {
+                                enum_titles: ["Clean matches", "Keep matches"]
+                            }
+                        },
+                        title_regex: {
+                            title: 'Title Regex',
+                            type: "string",
+                        },
+                        content_regex: {
+                            title: 'Content Regex',
+                            type: "string",
+                        },
+                        category_regex: {
+                            title: 'Category Regex',
+                            type: 'string',
+                        },
+                        state: {
+                            title: "Mark As",
+                            type: "string",
+                            required: true,
+                            enum: ['read', 'removed'],
+                            options: {
+                                enum_titles: ['Read', 'Removed']
+                            }
+                        },
+                    },
+                }
+            },
+        }
+    }
+
+    var editor = new JSONEditor(document.getElementById('editor_holder'), {
+        theme: 'bootstrap4',
+        // theme: 'html',
+        iconlib: "spectre",
+        show_errors: 'always',
+        disable_array_delete_last_row: true,
+        disable_array_delete_all_rows: true,
+        // disable_array_reorder: true,
+        enable_array_copy: true,
+        disable_collapse: true,
+        disable_edit_json: true,
+        disable_properties: true,
+        // array_controls_top: true,
+        prompt_before_delete: false,
+        no_additional_properties: true,
+        schema
+    })
+
+    fetch('api/config')
+        .then(res => res.ok ? res : Promise.reject({status: res.status, statusText: res.statusText}))
+        .then(res => res.json())
+        .then(data => editor.setValue(data))
+        .catch(err => alert(JSON.stringify(err)))
+
+
+    document.getElementById('save').addEventListener('click', () => {
+        fetch('api/config', {
+            body: JSON.stringify(editor.getValue()),
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            method: 'PUT'
+        })
+            .then(res => res.ok ? res : Promise.reject({status: res.status, statusText: res.statusText}))
+            .then(() => {
+                alert('Saved!')
+                window.location.reload()
+            })
+            .catch(err => alert(JSON.stringify(err)))
+    })
+
+    document.getElementById('preview').addEventListener('click', () => {
+        const elem = document.getElementById('output')
+        elem.innerText = 'Please wait ...'
+        fetch('api/config/preview', {
+            body: JSON.stringify(editor.getValue()),
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            method: 'POST'
+        })
+            .then(res => res.ok ? res : Promise.reject({status: res.status, statusText: res.statusText}))
+            .then(res => res.text())
+            .then(output => {
+                if (output.length > 0) {
+                    elem.innerText = output
+                } else {
+                    elem.innerText = 'Rules do not apply to an (unread) entry'
+                }
+                document.getElementById('save').style.display = 'block'
+            })
+            .catch(err => alert(JSON.stringify(err)))
+    })
+
+    editor.on('change', () => {
+        const errors = editor.validate()
+        document.getElementById('save').style.display = 'none'
+        document.getElementById('preview').disabled = errors.length > 0
+    })
+</script>
+</body>
+
+</html>
