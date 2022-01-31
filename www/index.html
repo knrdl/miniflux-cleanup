@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
     <meta charset="utf-8"/>
@@ -116,23 +116,29 @@
         }
     }
 
-    var editor = new JSONEditor(document.getElementById('editor_holder'), {
-        theme: 'bootstrap4',
-        // theme: 'html',
-        iconlib: "spectre",
-        show_errors: 'always',
-        disable_array_delete_last_row: true,
-        disable_array_delete_all_rows: true,
-        // disable_array_reorder: true,
-        enable_array_copy: true,
-        disable_collapse: true,
-        disable_edit_json: true,
-        disable_properties: true,
-        // array_controls_top: true,
-        prompt_before_delete: false,
-        no_additional_properties: true,
-        schema
-    })
+    let editor
+
+    function initEditor() {
+        editor = new JSONEditor(document.getElementById('editor_holder'), {
+            theme: 'bootstrap4',
+            // theme: 'html',
+            iconlib: "spectre",
+            show_errors: 'always',
+            disable_array_delete_last_row: true,
+            disable_array_delete_all_rows: true,
+            // disable_array_reorder: true,
+            enable_array_copy: true,
+            disable_collapse: true,
+            disable_edit_json: true,
+            disable_properties: true,
+            // array_controls_top: true,
+            prompt_before_delete: false,
+            no_additional_properties: true,
+            schema
+        })
+    }
+
+    initEditor()
 
     fetch('api/config')
         .then(res => res.ok ? res : Promise.reject({status: res.status, statusText: res.statusText}))
@@ -185,6 +191,26 @@
         document.getElementById('save').style.display = 'none'
         document.getElementById('preview').disabled = errors.length > 0
     })
+
+    let oldWindowSize = null
+
+    function handleResize() {
+        const BREAKPOINT = 1000  // table to list breakpoint (px)
+        const isInit = (oldWindowSize === null)
+        const isShrink = (window.innerWidth < BREAKPOINT && oldWindowSize >= BREAKPOINT)
+        const isEnlarge = (window.innerWidth >= BREAKPOINT && oldWindowSize < BREAKPOINT)
+        if (isInit || isShrink || isEnlarge) {
+            oldWindowSize = window.innerWidth
+            schema.properties.rules.format = window.innerWidth < BREAKPOINT ? null : "table"
+            const value = editor.getValue()
+            editor.destroy()
+            initEditor()
+            editor.setValue(value)
+        }
+    }
+
+    window.addEventListener('resize', handleResize);
+    handleResize()
 </script>
 </body>
 
