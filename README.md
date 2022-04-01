@@ -7,7 +7,7 @@ This tool watches out for new posts and applies the filtering rules to them (see
 ## Setup
 
 ```yaml
-version: '3'
+version: '3.9'
 services:
   miniflux-cleanup:
     image: knrdl/miniflux-cleanup
