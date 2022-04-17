@@ -63,7 +63,7 @@ func startCronjob() {
 func runCronUpdate(client *miniflux.Client, config Config, oldHighestId int64) error {
 	var readIds []int64
 	var removedIds []int64
-	entryResultSet, err := client.Entries(&miniflux.Filter{Starred: false, Direction: "desc", Status: "unread", AfterEntryID: oldHighestId, Limit: EntryProcessingLimit, Order: "id"})
+	entryResultSet, err := client.Entries(&miniflux.Filter{Starred: miniflux.FilterNotStarred, Direction: "desc", Status: "unread", AfterEntryID: oldHighestId, Limit: EntryProcessingLimit, Order: "id"})
 	if err != nil {
 		return err
 	}

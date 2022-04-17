@@ -48,7 +48,7 @@ func queryPreview(payload *Config) (string, error) {
 	client := miniflux.New(getMinifluxUrl(), payload.ApiKey)
 	var readIds []int64
 	var removedIds []int64
-	entryResultSet, err := client.Entries(&miniflux.Filter{Starred: false, Direction: "desc", Status: "unread", Limit: EntryProcessingLimit, Order: "id"})
+	entryResultSet, err := client.Entries(&miniflux.Filter{Starred: miniflux.FilterNotStarred, Direction: "desc", Status: "unread", Limit: EntryProcessingLimit, Order: "id"})
 	if err != nil {
 		return "", err
 	}
