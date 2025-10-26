@@ -42,7 +42,7 @@ func isEntryMatchingRule(entry *miniflux.Entry, rule *FilterRule) bool {
 		}
 		switch rule.UrlMode {
 		case "full":
-			if strings.ToLower(rule.UrlValue) != strings.ToLower(url) {
+			if !strings.EqualFold(rule.UrlValue, url) {
 				return false
 			}
 		case "start":

@@ -46,7 +46,7 @@ func handlePreview(writer http.ResponseWriter, request *http.Request) {
 
 func queryPreview(payload *Config) (string, error) {
 	output := ""
-	client := miniflux.New(getMinifluxUrl(), payload.ApiKey)
+	client := miniflux.NewClient(getMinifluxUrl(), payload.ApiKey)
 	var readIds []int64
 	var removedIds []int64
 	entryResultSet, err := client.Entries(&miniflux.Filter{Starred: miniflux.FilterNotStarred, Direction: "desc", Status: "unread", Limit: EntryProcessingLimit, Order: "id"})

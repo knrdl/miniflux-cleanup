@@ -43,7 +43,7 @@ func startCronjob() {
 			}
 
 			for _, username := range usernames { // do filter
-				client := miniflux.New(getMinifluxUrl(), configs[username].ApiKey)
+				client := miniflux.NewClient(getMinifluxUrl(), configs[username].ApiKey)
 				val := getHighestId(client)
 				if val > highestIds[username] {
 					if err := runCronUpdate(client, configs[username], highestIds[username]); err != nil {

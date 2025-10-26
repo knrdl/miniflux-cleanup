@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"path"
 	"path/filepath"
@@ -33,12 +32,7 @@ func readConfig(username string, config *Config) error {
 		*config = Config{Rules: []FilterRule{}}
 		return nil
 	}
-	jsonFile, err := os.Open(configPath)
-	if err != nil {
-		return err
-	}
-	defer jsonFile.Close()
-	byteValue, err := ioutil.ReadAll(jsonFile)
+	byteValue, err := os.ReadFile(configPath)
 	if err != nil {
 		return err
 	}
