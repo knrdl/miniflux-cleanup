@@ -2,8 +2,9 @@ package main
 
 import (
 	"log"
-	miniflux "miniflux.app/client"
 	"time"
+
+	miniflux "miniflux.app/v2/client"
 )
 
 var cronjobUpdate = make(chan bool, 1)

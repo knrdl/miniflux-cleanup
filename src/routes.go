@@ -3,8 +3,9 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	miniflux "miniflux.app/client"
 	"net/http"
+
+	miniflux "miniflux.app/v2/client"
 )
 
 func handleRetrieveConfig(writer http.ResponseWriter, request *http.Request) {

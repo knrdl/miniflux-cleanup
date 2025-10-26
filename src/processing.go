@@ -2,9 +2,10 @@ package main
 
 import (
 	"log"
-	miniflux "miniflux.app/client"
 	"regexp"
 	"strings"
+
+	miniflux "miniflux.app/v2/client"
 )
 
 func updateEntries(client *miniflux.Client, readIds *[]int64, removedIds *[]int64) error {
