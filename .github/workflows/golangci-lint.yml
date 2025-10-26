@@ -18,4 +18,6 @@ jobs:
           go-version: stable
       - name: golangci-lint
         uses: golangci/golangci-lint-action@v8
+        with:
+          working-directory: src
         
