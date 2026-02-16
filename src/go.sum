@@ -1,4 +1,4 @@
 github.com/gorilla/mux v1.8.1 h1:TuBL49tXwgrFYWhqrNgrUNEY92u81SPhu7sTdzQEiWY=
 github.com/gorilla/mux v1.8.1/go.mod h1:AKf9I4AEqPTmMytcMc0KkNouC66V3BtZ4qD5fmWSiMQ=
-miniflux.app/v2 v2.2.16 h1:1BjRC34dCAqWQ8gyQUB6YZmiZa/zyxcASxtTUniAbcs=
-miniflux.app/v2 v2.2.16/go.mod h1:ewlbgrFlT/RjK3efhFzwjJUCJmmxQJ45Rb9MdN5+DSs=
+miniflux.app/v2 v2.2.17 h1:1YMbVyWP89KhT+VMkMtMH5IXkKqNexXRnlmJ0hDQfDA=
+miniflux.app/v2 v2.2.17/go.mod h1:CZWAyNej7wq866rVxhjW/lRaoV1sY24Ws4O4MDr/3Ls=
