@@ -8,14 +8,9 @@ import (
 	miniflux "miniflux.app/v2/client"
 )
 
-func updateEntries(client *miniflux.Client, readIds *[]int64, removedIds *[]int64) error {
+func updateEntries(client *miniflux.Client, readIds *[]int64) error {
 	if len(*readIds) > 0 {
 		if err := client.UpdateEntries(*readIds, "read"); err != nil {
-			return err
-		}
-	}
-	if len(*removedIds) > 0 {
-		if err := client.UpdateEntries(*removedIds, "read"); err != nil {
 			return err
 		}
 	}

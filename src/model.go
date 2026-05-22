@@ -8,7 +8,6 @@ type FilterRule struct {
 	TitleRegex    string `json:"title_regex"`
 	ContentRegex  string `json:"content_regex"`
 	CategoryRegex string `json:"category_regex"`
-	State         string `json:"state"`
 }
 
 type Config struct {

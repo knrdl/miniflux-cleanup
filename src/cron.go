@@ -63,7 +63,6 @@ func startCronjob() {
 
 func runCronUpdate(client *miniflux.Client, config Config, oldHighestId int64) error {
 	var readIds []int64
-	var removedIds []int64
 	entryResultSet, err := client.Entries(&miniflux.Filter{Starred: miniflux.FilterNotStarred, Direction: "desc", Status: "unread", AfterEntryID: oldHighestId, Limit: EntryProcessingLimit, Order: "id"})
 	if err != nil {
 		return err
@@ -71,18 +70,13 @@ func runCronUpdate(client *miniflux.Client, config Config, oldHighestId int64) e
 	for _, entry := range entryResultSet.Entries {
 		for _, rule := range config.Rules {
 			if isEntryMatchingRule(entry, &rule) {
-				if !contains(readIds, entry.ID) && !contains(removedIds, entry.ID) {
-					switch rule.State {
-					case "read":
-						readIds = append(readIds, entry.ID)
-					case "removed":
-						removedIds = append(removedIds, entry.ID)
-					}
+				if !contains(readIds, entry.ID) {
+					readIds = append(readIds, entry.ID)
 				}
 			}
 		}
 	}
-	if err := updateEntries(client, &readIds, &removedIds); err != nil {
+	if err := updateEntries(client, &readIds); err != nil {
 		return err
 	}
 	return nil
