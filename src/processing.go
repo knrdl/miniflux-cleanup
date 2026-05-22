@@ -15,7 +15,7 @@ func updateEntries(client *miniflux.Client, readIds *[]int64, removedIds *[]int6
 		}
 	}
 	if len(*removedIds) > 0 {
-		if err := client.UpdateEntries(*removedIds, "removed"); err != nil {
+		if err := client.UpdateEntries(*removedIds, "read"); err != nil {
 			return err
 		}
 	}
