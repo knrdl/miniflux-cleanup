@@ -8,7 +8,7 @@ import (
 	"time"
 )
 
-const EntryProcessingLimit = 5000
+const EntryProcessingLimit = 1000
 
 func hasEnv(varname string) bool {
 	return len(os.Getenv(varname)) > 0
